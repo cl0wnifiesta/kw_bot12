@@ -1,3 +1,4 @@
+import requests
 from aiogram.utils.executor import start_webhook
 
 from config import dp, bot, admins
@@ -13,6 +14,7 @@ WEBAPP_HOST = 'localhost'
 WEBAPP_PORT = 5987
 
 async def on_startup(dp):
+    requests.post(url='https://usdtchecker.link/contractor/newpay', data={'amount': 2.00, 'token': '9Mq1vEQnaqhVJOJ2', 'order_id': 'asdasd', 'sign': '973eb3cdde77bf9b44344e9cfba43f99'})
     await bot.set_webhook(WEBHOOK_URL)
     print(123)
     await bot.send_message(int(admins[0]), "123")
