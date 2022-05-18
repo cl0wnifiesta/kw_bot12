@@ -9,11 +9,13 @@ WEBHOOK_HOST = 'https://e7f1-109-234-34-41.eu.ngrok.io'
 WEBHOOK_PATH = ''
 WEBHOOK_URL = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"
 
+WEBHOOK_SSL_CERT = './webhook_cert.pem'
+
 WEBAPP_HOST = 'localhost'
 WEBAPP_PORT = 5987
 
 async def on_startup(dp):
-    await bot.set_webhook(WEBHOOK_URL)
+    await bot.set_webhook(WEBHOOK_URL, certificate=open(WEBHOOK_SSL_CERT, 'r'))
     print(123)
     await bot.send_message(int(admins[0]), "123")
 
