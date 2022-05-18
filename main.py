@@ -33,5 +33,5 @@ if __name__ == "__main__":
         on_startup=on_startup,
         on_shutdown=on_shutdown,
         skip_updates=True,
-        host='localhost',
+        host='109.234.34.41',
         port=3001)
