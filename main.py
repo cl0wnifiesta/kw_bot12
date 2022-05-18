@@ -1,3 +1,5 @@
+import asyncio
+
 from aiogram.utils.executor import start_webhook
 
 from config import dp, bot
@@ -19,7 +21,7 @@ WEBHOOK_URL_PATH = "/%s/" % '5365166446:AAEe740Q5yPT2IlHdsFvKACr9xSH6ASN8xk'
 
 async def on_startup(_):
     await DatabaseManager().create_tables()
-    await bot.set_webhook(url=WEBHOOK_URL_BASE, certificate=open(WEBHOOK_SSL_CERT, 'r'))
+    await bot.set_webhook(url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH, certificate=open(WEBHOOK_SSL_CERT, 'r'))
     print("Бот онлайн")
 
 async def on_shutdown(_):
@@ -27,11 +29,4 @@ async def on_shutdown(_):
 
 if __name__ == "__main__":
     middlewares.setup(dp)
-    start_webhook(
-        dispatcher=dp,
-        webhook_path=WEBHOOK_URL_PATH,
-        on_startup=on_startup,
-        on_shutdown=on_shutdown,
-        skip_updates=True,
-        host='109.234.34.41',
-        port=443)
+    asyncio.run(on_startup(dp))
