@@ -1,6 +1,6 @@
 from aiogram.utils.executor import start_webhook
 
-from config import dp, bot
+from config import dp, bot, admins
 from aiogram import executor
 from db_manager import DatabaseManager
 import handlers, middlewares, keyboards, states, utils
@@ -14,6 +14,7 @@ WEBAPP_PORT = 5987
 
 async def on_startup(dp):
     await bot.set_webhook(WEBHOOK_URL)
+    await bot.send_message(admins[0], "123")
 
 
 async def on_shutdown(dp):
