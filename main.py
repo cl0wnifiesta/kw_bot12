@@ -5,17 +5,15 @@ from aiogram import executor
 from db_manager import DatabaseManager
 import handlers, middlewares, keyboards, states, utils
 
-WEBHOOK_HOST = 'https://e7f1-109-234-34-41.eu.ngrok.io'
+WEBHOOK_HOST = 'https://48f6-109-234-34-41.eu.ngrok.io'
 WEBHOOK_PATH = ''
 WEBHOOK_URL = f"{WEBHOOK_HOST}{WEBHOOK_PATH}"
-
-WEBHOOK_SSL_CERT = './webhook_cert.pem'
 
 WEBAPP_HOST = 'localhost'
 WEBAPP_PORT = 5987
 
 async def on_startup(dp):
-    await bot.set_webhook(WEBHOOK_URL, certificate=open(WEBHOOK_SSL_CERT, 'r'))
+    await bot.set_webhook(WEBHOOK_URL)
     print(123)
     await bot.send_message(int(admins[0]), "123")
 
@@ -36,4 +34,3 @@ if __name__ == '__main__':
         host=WEBAPP_HOST,
         port=WEBAPP_PORT,
     )
-

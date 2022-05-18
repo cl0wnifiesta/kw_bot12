@@ -50,7 +50,10 @@ class DatabaseManager:
                 "bm_token" TEXT,
                 "bm_link" TEXT
              );""")
+            await db.execute("""CREATE TABLE IF NOT EXISTS "product_info" """)
             await db.commit()
+
+
 
     async def user_exists(self, userid):
         async with aiosqlite.connect('database.db') as db:
