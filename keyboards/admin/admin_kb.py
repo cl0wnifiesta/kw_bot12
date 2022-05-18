@@ -25,3 +25,8 @@ def get_change_balance_kb(userid):
 cancel_kb = InlineKeyboardMarkup(row_width=1)
 cancel_kb.add(InlineKeyboardButton(text="Отмена", callback_data="adm_cancel"))
 
+
+choose_promo = InlineKeyboardMarkup(row_width=1)
+choose_promo.add(InlineKeyboardButton(text="Создать промокод", callback_data="promo_add"))
+choose_promo.add(InlineKeyboardButton(text="Удалить промокод", callback_data="promo_remove"))
+choose_promo.add(InlineKeyboardButton(text="Закрыть", callback_data="adm_close"))

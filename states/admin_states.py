@@ -25,3 +25,6 @@ class AddSubcategory(StatesGroup):
 
 class UpdateProduct(StatesGroup):
     get_data = State()
+
+class PromoRemove(StatesGroup):
+    get_name = State()

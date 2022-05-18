@@ -83,10 +83,20 @@ class DatabaseManager:
             ex = await db.execute("""SELECT * FROM users WHERE userid == ?""", (int(userid),))
             return await ex.fetchone()
 
+    async def get_promos(self):
+        async with aiosqlite.connect('database.db') as db:
+            ex = await db.execute("""SELECT * FROM promos""")
+            return await ex.fetchall()
+
     async def add_promo(self, promo_text, procent, amount_of_usage):
         async with aiosqlite.connect('database.db') as db:
             await db.execute("""INSERT INTO promos(promo_text, procent, usage_amount) 
                                 VALUES(?, ?, ?)""", (promo_text, int(procent), int(amount_of_usage)))
+            await db.commit()
+
+    async def remove_promo(self, promo_text):
+        async with aiosqlite.connect('database.db') as db:
+            await db.execute("""DELETE FROM promos WHERE promo_text == ?""", (promo_text,))
             await db.commit()
 
     async def get_product_list(self, region):

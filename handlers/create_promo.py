@@ -2,15 +2,44 @@ from aiogram import types
 from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher import FSMContext
 
-from states.admin_states import CreatePromo
+from states.admin_states import CreatePromo, PromoRemove
 from config import dp, bot, admins, base
-from keyboards.admin.admin_kb import cancel_kb
+from keyboards.admin.admin_kb import cancel_kb, choose_promo
 
 @dp.message_handler(Text(equals="📄Создать промокод"), user_id=admins, state=None)
-async def create_promo(message: types.Message, state: FSMContext):
+async def promo_choose(message: types.Message, state: FSMContext):
+    answer_text = "<strong>Текст</strong> | <strong>Процент скидки</strong> | <strong>Кол-во использований</strong>:\n\n"
+    for promo in await base.get_promos():
+        answer_text += f"{promo[0]} | {promo[1]}% | Остаток: {promo[2]}\n"
+    await message.answer(answer_text, reply_markup=choose_promo)
+
+@dp.callback_query_handler(Text("promo_remove"))
+async def remove_promo(call: types.CallbackQuery, state: FSMContext):
+    await PromoRemove.get_name.set()
+    async with state.proxy() as data:
+        data['message_id'] = (
+            await call.message.edit_text("Введите текст промокода:", reply_markup=cancel_kb)).message_id
+
+@dp.message_handler(state=PromoRemove.get_name)
+async def get_promo_text(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        try:
+            await base.remove_promo(message.text)
+            await bot.edit_message_text("❗Промокод успешно удалён:", chat_id=message.from_user.id,
+                                        message_id=data['message_id'])
+        except:
+            await bot.edit_message_text("❎Ошибка: такого промокода не существует", chat_id=message.from_user.id,
+                                        message_id=data['message_id'],
+                                        reply_markup=cancel_kb)
+        finally:
+            await message.delete()
+            await state.finish()
+
+@dp.callback_query_handler(Text("promo_add"))
+async def create_promo(call: types.CallbackQuery, state: FSMContext):
     await CreatePromo.get_promo_text.set()
     async with state.proxy() as data:
-        data['message_id'] = (await message.answer("Введите текст промокода:", reply_markup=cancel_kb)).message_id
+        data['message_id'] = (await call.message.edit_text("Введите текст промокода:", reply_markup=cancel_kb)).message_id
 
 @dp.message_handler(state=CreatePromo.get_promo_text)
 async def get_promo_text(message: types.Message, state: FSMContext):
@@ -46,7 +75,7 @@ async def get_promo_text(message: types.Message, state: FSMContext):
             await bot.edit_message_text("✅Промокод успешно добавлен!\n\n"
                                         f"Текст: <strong>{data['text']}</strong>\n"
                                         f"Скидка: <code>{str(data['procent'])}%</code>\n"
-                                        f"Количество использований: <code>{str(data['amount_of_usage'])}%</code>",
+                                        f"Количество использований: <code>{str(data['amount_of_usage'])}</code>",
                                         chat_id=message.from_user.id, message_id=data['message_id'])
     except ValueError:
         await message.answer("❌Неправильный ввод!")
