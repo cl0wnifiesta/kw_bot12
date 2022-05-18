@@ -22,7 +22,7 @@ async def on_shutdown(dp):
     await dp.storage.wait_closed()
 
 
-if __name__ == 'main':
+if __name__ == '__main__':
     start_webhook(
         dispatcher=dp,
         webhook_path=WEBHOOK_PATH,
