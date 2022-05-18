@@ -14,7 +14,8 @@ WEBAPP_PORT = 5987
 
 async def on_startup(dp):
     await bot.set_webhook(WEBHOOK_URL)
-    await bot.send_message(admins[0], "123")
+    print(123)
+    await bot.send_message(int(admins[0]), "123")
 
 
 async def on_shutdown(dp):
