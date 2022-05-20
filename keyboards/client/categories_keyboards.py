@@ -1,5 +1,4 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from aiogram.types import CallbackQuery
 
 from config import base
 
@@ -8,6 +7,7 @@ categories_kb = InlineKeyboardMarkup(row_width=1)
 categories_kb.add(InlineKeyboardMarkup(text="🇺🇦Украина", callback_data="category_ukraine"))
 categories_kb.add(InlineKeyboardMarkup(text="🇵🇱Польша", callback_data="category_poland"))
 categories_kb.add(InlineKeyboardMarkup(text="🇺🇸США", callback_data="category_usa"))
+categories_kb.add(InlineKeyboardButton(text="Закрыть", callback_data="adm_close"))
 
 async def get_product_kb(region):
     products = await base.get_product_list(region)

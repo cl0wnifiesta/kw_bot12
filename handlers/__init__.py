@@ -5,3 +5,6 @@ from . import change_users
 from . import create_promo
 from . import edit_products
 from . import buy_accs
+from . import change_commands
+from . import profile
+from . import kopeechka

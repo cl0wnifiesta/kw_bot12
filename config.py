@@ -11,11 +11,13 @@ with open('admins.txt', "r") as file:
     admins = file.read().split("\n")
 
 with open("config.txt", "r") as file:
-    file_split = file.read().split()
-    qiwi_auth_key = file_split[0].split(":")[1]
-    log_chat_id = file_split[1].split(":")[1]
+    file_split = file.read().split("\n")
+    qiwi_auth_key = file_split[0].split("!")[1]
+    log_chat_id = file_split[1].split("!")[1]
+    bot_token = file_split[2].split("!")[1]
+    kopeechka_token = file_split[3].split("!")[1]
 
-bot = Bot(token='5365166446:AAEe740Q5yPT2IlHdsFvKACr9xSH6ASN8xk', parse_mode="HTML")
+bot = Bot(token=bot_token, parse_mode="HTML")
 storage = MemoryStorage()
 base = DatabaseManager()
 

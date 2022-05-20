@@ -1,13 +1,10 @@
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from aiogram.types import CallbackQuery
-
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup
 
 main_admin_kb = ReplyKeyboardMarkup(resize_keyboard=True)
 
+main_admin_kb.row("💬Изменение сообщений", "💼Товары")
 main_admin_kb.row("📢Рассылка", "👨Пользователи")
-main_admin_kb.row("📊Статистика", "📄Создать промокод")
-main_admin_kb.add("💼Товары")
+main_admin_kb.row("📊Статистика", "📄Промокоды")
 main_admin_kb.add("↩Вернуться в режим пользователя")
 
 detail_user_kb = InlineKeyboardMarkup(row_width=1)
@@ -30,3 +27,10 @@ choose_promo = InlineKeyboardMarkup(row_width=1)
 choose_promo.add(InlineKeyboardButton(text="Создать промокод", callback_data="promo_add"))
 choose_promo.add(InlineKeyboardButton(text="Удалить промокод", callback_data="promo_remove"))
 choose_promo.add(InlineKeyboardButton(text="Закрыть", callback_data="adm_close"))
+
+change_command_kb = InlineKeyboardMarkup(row_width=1)
+change_command_kb.add(InlineKeyboardButton(text="Правила", callback_data="command_change_rules"))
+change_command_kb.add(InlineKeyboardButton(text="Поддержка", callback_data="command_change_help"))
+change_command_kb.add(InlineKeyboardButton(text="Акции", callback_data="command_change_stock"))
+change_command_kb.add(InlineKeyboardButton(text="Альтернативные способы оплаты", callback_data="command_change_altpayment"))
+change_command_kb.add(InlineKeyboardButton(text="Закрыть", callback_data="adm_close"))

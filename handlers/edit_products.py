@@ -131,7 +131,6 @@ async def get_product_file(message: types.Message, state: FSMContext):
         sheet = wb.get_sheet_names()[0]
         products_df = pd.read_excel(destination, sheet_name=sheet)
         products_dict = products_df.to_dict()
-        print(products_dict)
         async with state.proxy() as data:
             data_in_list = convert_dict_of_df_to_list(data['product_id'], products_dict)
             await base.input_product_info(data_in_list)

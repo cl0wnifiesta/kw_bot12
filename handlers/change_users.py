@@ -28,12 +28,14 @@ async def get_user_id_for_detail_view(message: types.Message, state: FSMContext)
     try:
         if await base.user_exists(int(message.text)):
             user_stats = await base.get_detail_user_info(message.text)
-            await message.answer("➖➖➖➖<b>👤Профиль пользователя</b>➖➖➖➖\n"
+            await message.answer("➖➖➖<b>👤Профиль пользователя</b>➖➖➖\n"
                                  f'🈹Пользователь: <a href="tg://user?id={str(user_stats[1])}">@{user_stats[0]}</a>\n'
                                  f"🆔ID пользователя: <code>{str(user_stats[1])}</code>\n"
-                                 f"👨‍Реферал: <code>{str(user_stats[2]) if user_stats[2]!=0 else 'Нет'}</code>\n"
-                                 f"💸Баланс: <code>{str(user_stats[4])}</code> рублей\n"
-                                 f"🛒Количество покупок: <code>{str(user_stats[5])}</code>\n",
+                                 f"👨Айди реферала: <code>{str(user_stats[2]) if user_stats[2] != 0 else 'Нет'}</code>\n"
+                                 f"💸Сумма начислений с реферальной системы: <code>{user_stats[3]}</code> рублей\n"
+                                 f"💸Баланс: <code>{str(user_stats[5])}</code> рублей\n"
+                                 f"💯Скидка: <code>{str(user_stats[4])}</code> %\n"
+                                 f"🛒Количество покупок: <code>{str(user_stats[6])}</code>\n",
                                  reply_markup=get_change_balance_kb(user_stats[1]))
     except ValueError:
         await message.answer("Неверный ввод!")

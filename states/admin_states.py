@@ -14,6 +14,7 @@ class CreatePromo(StatesGroup):
     get_promo_text = State()
     get_procent = State()
     get_amount_of_usage = State()
+    get_interval = State()
 
 class GetProducts(StatesGroup):
     get_product_file = State()
@@ -28,3 +29,6 @@ class UpdateProduct(StatesGroup):
 
 class PromoRemove(StatesGroup):
     get_name = State()
+
+class ChangeCommand(StatesGroup):
+    get_text = State()

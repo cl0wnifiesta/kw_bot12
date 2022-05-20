@@ -13,6 +13,8 @@ async def start_message(message: types.Message):
         if " " in message.text:
             try:
                 referal = int(message.text.split(" ")[1])
+                if referal == message.from_user.id:
+                    referal = 0
             except ValueError:
                 pass
         await base.add_user(message.from_user.id, message.from_user.username, referal)
@@ -21,14 +23,10 @@ async def start_message(message: types.Message):
 
 @dp.message_handler(Text("🆘Поддержка"), state=None)
 async def help_message(message: types.Message):
-    await message.answer('➖➖➖➖<b>🆘Поддержка</b>➖➖➖➖\n'
-                         '@FBshop2020\n'
-                         'Поддержка с 09:00 до 21-00 по МСК (ПН-ПТ)\n'
-                         'СБ-ВС - - - Работа в свободном режиме')
+    await message.answer(await base.get_command_text('help'))
 
 @dp.message_handler(Text("🔔Акции"), state=None)
 async def help_message(message: types.Message):
-    await message.answer('➖➖➖➖<b>🔔Акции</b>➖➖➖➖\n'
-                         'ПРОМОКОД -20%: FBshop20 (действует до 30 мая 2022г)')
+    await message.answer(await base.get_command_text('stock'))
 
 
