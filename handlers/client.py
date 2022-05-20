@@ -10,7 +10,6 @@ from aiogram.dispatcher.filters import Text
 
 @dp.message_handler(commands="start", state="*")
 async def start_message(message: types.Message, state: FSMContext):
-    await state.finish()
     if not await base.user_exists(message.from_user.id):
         referal = 0
         if " " in message.text:
@@ -23,6 +22,7 @@ async def start_message(message: types.Message, state: FSMContext):
         await base.add_user(message.from_user.id, message.from_user.username, referal)
     await bot.send_message(message.from_user.id, "Добро пожаловать в магазин 🔥 фарм аккаунтов по приемлемым ценам 💵. "
                                                  "Продажа аккаунтов только в одни руки 🤲.", reply_markup=main_kb)
+    await state.finish()
 
 @dp.message_handler(Text("🆘Поддержка"), state=None)
 async def help_message(message: types.Message):

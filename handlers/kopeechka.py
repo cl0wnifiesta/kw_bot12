@@ -71,7 +71,7 @@ async def email_code_request_email(message: types.Message, state: FSMContext):
         await message.answer('Действие отменено', reply_markup=main_kb)
         await state.finish()
     else:
-        await message.answer('Неизвестное сообщение!')
+        await message.answer('Неизвестное сообщение!', reply_markup=main_kb)
         await state.finish()
 
 @dp.callback_query_handler(Text(startswith="email_code_check_"))
