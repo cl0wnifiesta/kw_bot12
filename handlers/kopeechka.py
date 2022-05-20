@@ -70,6 +70,9 @@ async def email_code_request_email(message: types.Message, state: FSMContext):
     elif message.text == "⬅Отмена":
         await message.answer('Действие отменено', reply_markup=main_kb)
         await state.finish()
+    else:
+        await message.answer('Неизвестное сообщение!')
+        await state.finish()
 
 @dp.callback_query_handler(Text(startswith="email_code_check_"))
 async def email_check_code(call: types.CallbackQuery):
@@ -86,7 +89,6 @@ async def email_check_code(call: types.CallbackQuery):
             await call.message.delete()
         elif response2.json()['value'] == 'WAIT_LINK':
             await call.message.answer("Письмо ещё не получено!", reply_markup=main_kb)
-
     elif response2.json()['status'] == 'OK':
         if msg_type == 'only_code':
             soup = BeautifulSoup(response2.json()['fullmessage'], 'html.parser')

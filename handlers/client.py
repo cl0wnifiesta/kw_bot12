@@ -1,4 +1,6 @@
 from aiogram import types
+from aiogram.dispatcher import FSMContext
+
 from config import dp, bot, base
 
 from keyboards.client.main_keyboard import main_kb
@@ -7,7 +9,8 @@ from aiogram.dispatcher.filters import Text
 
 
 @dp.message_handler(commands="start")
-async def start_message(message: types.Message):
+async def start_message(message: types.Message, state: FSMContext):
+    await state.finish()
     if not await base.user_exists(message.from_user.id):
         referal = 0
         if " " in message.text:
