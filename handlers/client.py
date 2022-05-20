@@ -8,7 +8,7 @@ from keyboards.client.main_keyboard import main_kb
 from aiogram.dispatcher.filters import Text
 
 
-@dp.message_handler(commands="start")
+@dp.message_handler(commands="start", state="*")
 async def start_message(message: types.Message, state: FSMContext):
     await state.finish()
     if not await base.user_exists(message.from_user.id):
