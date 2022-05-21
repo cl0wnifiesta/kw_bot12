@@ -11,7 +11,7 @@ from config import dp, bot, base, qiwi_p2p, log_chat_id
 from states.client_states import BuyProduct
 from keyboards.client.categories_keyboards import categories_kb, get_product_kb
 from keyboards.admin.admin_kb import cancel_kb
-from keyboards.client.payment_keyboards import get_payment_kb
+from keyboards.client.payment_keyboards import get_payment_kb, get_buy_by_balance_accept_kb
 from utils.get_product import get_product_sell_info
 
 
@@ -159,7 +159,7 @@ async def buy_product_reject_qiwi_payment(callback: types.CallbackQuery):
     await callback.answer()
 
 @dp.callback_query_handler(Text(startswith="buy_balance_"))
-async def buy_product_by_balance(call: types.CallbackQuery):
+async def check_buy_by_balance(call: types.CallbackQuery, state: FSMContext):
     product = call.data.split("_")[2]
     count = call.data.split("_")[3]
     userid = call.from_user.id
@@ -180,25 +180,36 @@ async def buy_product_by_balance(call: types.CallbackQuery):
             amount = (int(count) * int(product_info[3]))
     else:
         amount = (int(count) * int(product_info[3]))
-    balance = await base.get_user_balance(call.from_user.id)
-    if balance < amount:
-        await call.message.edit_text("⭕Ошибка! \n\nНа вашем балансе недостаточно средст для покупки")
-        return
+    await call.message.edit_text("➖➖➖➖Чек оплаты➖➖➖➖\n\n"
+                                 f"💰Сумма оплаты: <code>{amount}</code>\n"
+                                 f"📝Номер заказа: <code>{bill_id_result}</code>\n\n",
+                                 reply_markup=await get_buy_by_balance_accept_kb(bill_id_result, amount, product, count))
+
+@dp.callback_query_handler(Text(startswith="balance_buy_accepted_"))
+async def buy_product_by_balance(call: types.CallbackQuery):
     try:
         await call.message.delete()
-        bill_id = bill_id_result
+        userid = call.from_user.id
+        bill_id = call.data.split("_")[3]
+        amount = int(call.data.split("_")[4])
+        product = int(call.data.split("_")[5])
+        count = int(call.data.split("_")[6])
+        balance = await base.get_user_balance(call.from_user.id)
+        if balance < amount:
+            await call.message.answer("⭕Ошибка! \n\nНа вашем балансе недостаточно средств для покупки")
+            return
         if int(await base.get_referal(call.from_user.id)) != 0:
             await base.referal_add(int(await base.get_referal(call.from_user.id)), int((int(amount) / 100) * 10))
         await base.user_sell_mixin(userid)
-        await call.message.answer(f"<b>✅Оплата счёта <code>{bill_id}</code> прошла успешно</b>")
         sell_files = await get_product_sell_info(product, count, bill_id)
         await base.add_sell_to_logs(bill_id, userid, amount)
         await base.change_user_balance(balance - amount, call.from_user.id)
+        await call.message.answer(f"<b>✅Оплата счёта <code>{bill_id}</code> прошла успешно</b>")
         await call.message.answer_document(open(sell_files['excel'], 'rb'))
         await call.message.answer_document(open(sell_files['txt'], 'rb'))
         await bot.send_message(log_chat_id, 'Новая покупка!\n'
                                             f'Айди пользователя: {call.from_user.id}\n'
-                                            f'Номер заказа: {bill_id_result}\n'
+                                            f'Номер заказа: {bill_id}\n'
                                             f'Сумма заказа: {amount}\n')
         await bot.send_document(log_chat_id, open(sell_files['excel'], 'rb'))
         await os.remove(sell_files['excel'])

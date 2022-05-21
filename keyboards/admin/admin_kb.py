@@ -34,3 +34,10 @@ change_command_kb.add(InlineKeyboardButton(text="Поддержка", callback_d
 change_command_kb.add(InlineKeyboardButton(text="Акции", callback_data="command_change_stock"))
 change_command_kb.add(InlineKeyboardButton(text="Альтернативные способы оплаты", callback_data="command_change_altpayment"))
 change_command_kb.add(InlineKeyboardButton(text="Закрыть", callback_data="adm_close"))
+
+admin_stats_kb = InlineKeyboardMarkup(row_width=2)
+admin_stats_kb.add(InlineKeyboardButton(text="За день", callback_data="admin_stats_day"))
+admin_stats_kb.add(InlineKeyboardButton(text="За неделю", callback_data="admin_stats_week"))
+admin_stats_kb.add(InlineKeyboardButton(text="За месяц", callback_data="admin_stats_month"))
+admin_stats_kb.add(InlineKeyboardButton(text="Закрыть", callback_data="adm_close"))
+

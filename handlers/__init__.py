@@ -8,3 +8,4 @@ from . import buy_accs
 from . import change_commands
 from . import profile
 from . import kopeechka
+from . import admin_stats

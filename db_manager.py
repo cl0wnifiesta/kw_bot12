@@ -61,7 +61,8 @@ class DatabaseManager:
             await db.execute("""CREATE TABLE IF NOT EXISTS "product_logs" (
                             "userid" INT,
                             "sum" INT,
-                            "order_id" TEXT
+                            "order_id" TEXT,
+                            "buy_date" TEXT
                             );""")
             await db.execute("""CREATE TABLE IF NOT EXISTS "promo_logs" (
                              "userid" INT,
@@ -282,7 +283,7 @@ class DatabaseManager:
 
     async def add_sell_to_logs(self, bill_id, userid, amount):
         async with aiosqlite.connect('database.db') as db:
-            await db.execute("""INSERT INTO product_logs(userid, sum, order_id) VALUES(?, ?, ?);""", (userid, amount, bill_id))
+            await db.execute("""INSERT INTO product_logs(userid, sum, order_id, buy_date) VALUES(?, ?, ?, datetime('now'));""", (userid, amount, bill_id))
 
             await db.commit()
 
@@ -312,3 +313,16 @@ class DatabaseManager:
     async def get_user_balance(self, userid):
         async with aiosqlite.connect('database.db') as db:
             return (await (await db.execute("""SELECT balance FROM users WHERE userid == ?""", (userid,))).fetchone())[0]
+
+    async def get_day_admin_stats(self):
+        async with aiosqlite.connect('database.db') as db:
+
+            return await(await db.execute("""SELECT * FROM product_logs WHERE buy_date BETWEEN DATETIME('now', '-1 day') and DATETIME('now') """)).fetchall()
+
+    async def get_week_admin_stats(self):
+        async with aiosqlite.connect('database.db') as db:
+            return await(await db.execute("""SELECT * FROM product_logs WHERE buy_date BETWEEN DATETIME('now', '-7 day') and DATETIME('now')""")).fetchall()
+
+    async def get_month_admin_stats(self):
+        async with aiosqlite.connect('database.db') as db:
+            return await(await db.execute("""SELECT * FROM product_logs WHERE buy_date BETWEEN DATETIME('now', '-1 month') and DATETIME('now')""")).fetchall()
