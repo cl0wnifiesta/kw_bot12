@@ -101,7 +101,7 @@ async def email_check_code(call: types.CallbackQuery):
             temp2 = soup.find('td',
                               style='font-size:11px;font-family:LucidaGrande,tahoma,verdana,arial,sans-serif;padding:14px 32px 14px 32px;background-color:#f2f2f2;border-left:1px solid #ccc;border-right:1px solid #ccc;border-top:1px solid #ccc;border-bottom:1px solid #ccc;text-align:center;border-radius:7px;display:block;border:1px solid #1877f2;background:#e7f3ff;')
             if temp2 is not None:
-                code = temp2.find('span', style='font-size:17px; font-family: Roboto; font-weight: 700; margin-left: 0px; margin-right: 0px;').get_text()
+                code = temp2.find('span').find('span').get_text()
             await call.message.answer(f"Код получен!\n\n<strong>{code}</strong>")
             await call.message.delete()
         elif msg_type == 'fullmsg':
