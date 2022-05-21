@@ -248,8 +248,6 @@ class DatabaseManager:
         async with aiosqlite.connect('database.db') as db:
             purchases = (await (await db.execute("""SELECT purchases FROM users WHERE userid == ?""", (userid,))).fetchone())[0]
             new_purchases = purchases + 1
-            await db.execute("""UPDATE users SET discount == ? WHERE userid == ?""", (0, userid))
-            await db.execute("""UPDATE users SET activated_promo == ? WHERE userid == ?""", (None, userid))
             await db.execute("""UPDATE users SET purchases == ? WHERE userid == ?""", (new_purchases, userid))
             await db.commit()
 

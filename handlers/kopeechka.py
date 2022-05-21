@@ -33,11 +33,11 @@ async def email_code_request_email(message: types.Message, state: FSMContext):
     await GetEmailCode.next()
     if message.text == "Только код":
         async with state.proxy() as data:
-            data['type'] = 'only_code'
+            data['type'] = 'onlycode'
         await message.answer("Нажмите в фейсбуке получить код на почту, после этого нажмите 'Код отправлен'", reply_markup=kopeechka_choose2)
     elif message.text == "Полное письмо":
         async with state.proxy() as data:
-            data['type'] = 'full_msg'
+            data['type'] = 'fullmsg'
         await message.answer("Нажмите в фейсбуке получить код на почту, после этого нажмите 'Код отправлен'", reply_markup=kopeechka_choose2)
     elif message.text == "⬅Отмена":
         await message.answer("Действие отменено", reply_markup=main_kb)
@@ -62,7 +62,9 @@ async def email_code_request_email(message: types.Message, state: FSMContext):
                 await message.answer('Неизвестная ошибка! Обратитесь в тех. поддержку', reply_markup=main_kb)
                 await state.finish()
         else:
-            await message.answer("✅Запрос отправлен!\n\nЧтобы проверить готовность письма нажмите кнопку ниже",
+            await message.answer("✅Запрос отправлен!",
+                                 reply_markup=main_kb)
+            await message.answer(f"Чтобы проверить готовность письма на почту {mail} нажмите кнопку ниже",
                                  reply_markup=InlineKeyboardMarkup(row_width=1).add(
                                      InlineKeyboardButton(text="Проверить готовность",
                                                           callback_data=f"email_code_check_{response1.json()['id']}_{msg_type}")))
@@ -90,14 +92,14 @@ async def email_check_code(call: types.CallbackQuery):
         elif response2.json()['value'] == 'WAIT_LINK':
             await call.message.answer("Письмо ещё не получено!", reply_markup=main_kb)
     elif response2.json()['status'] == 'OK':
-        if msg_type == 'only_code':
+        if msg_type == 'onlycode':
             soup = BeautifulSoup(response2.json()['fullmessage'], 'html.parser')
             temp1 = soup.find('td',
                               style='font-size:11px;font-family:LucidaGrande,tahoma,verdana,arial,sans-serif;padding:10px;background-color:#f2f2f2;border-left:none;border-right:none;border-top:none;border-bottom:none;')
             code = temp1.find('span').get_text()
             await call.message.answer(f"Код получен!\n\n<strong>{code}</strong>")
             await call.message.delete()
-        elif msg_type == 'full_msg':
+        elif msg_type == 'fullmsg':
             with open(f'products/{email_id}.html', "w") as f:
                 f.write(response2.json()['fullmessage'])
             await bot.send_document(call.from_user.id, open(f'products/{email_id}.html', 'rb'), caption="Письмо получено!\n\nВнутри HTML файла находится код страницы письма", reply_markup=main_kb)

@@ -36,7 +36,7 @@ async def buy_product_show_menu(callback: types.CallbackQuery, state: FSMContext
         data['message_id'] = (await callback.message.answer(f"<b>🈳Товар:</b> {product_info[2]}\n"
                                                             f"<b>💸Цена за 1 штуку товара:</b> {product_info[3]}\n"
                                                             f"<b>📙В наличии:</b> {product_info[4]}\n\n"
-                                                            f"<b>📃Описание:</b> {product_info[5]}\n\n"
+                                                            f"<b>📃Описание:</b>\n {product_info[5]}\n\n"
                                                             f"<em>Введите количество товара, которое вы хотите приобрести:</em>",
                                                             reply_markup=cancel_kb)).message_id
         data['product'] = product_number
@@ -198,7 +198,7 @@ async def buy_product_by_balance(call: types.CallbackQuery):
         await call.message.answer_document(open(sell_files['txt'], 'rb'))
         await bot.send_message(log_chat_id, 'Новая покупка!\n'
                                             f'Айди пользователя: {call.from_user.id}\n'
-                                            f'Номер заказа: {call.data.split("_")[2]}\n'
+                                            f'Номер заказа: {bill_id_result}\n'
                                             f'Сумма заказа: {amount}\n')
         await bot.send_document(log_chat_id, open(sell_files['excel'], 'rb'))
         await os.remove(sell_files['excel'])
