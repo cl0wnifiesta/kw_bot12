@@ -34,7 +34,7 @@ async def email_code_request_email(message: types.Message, state: FSMContext):
     if message.text == "Только код":
         async with state.proxy() as data:
             data['type'] = 'onlycode'
-        await message.answer("Нажмите в фейсбуке получить код на почту, после этого нажмите 'Код отправлен'", reply_markup=kopeechka_choose2)
+        await message.answer("Нажмите в фейсбуке получить код на почту, после этого нажмите 'Код отправлен' ", reply_markup=kopeechka_choose2)
     elif message.text == "Полное письмо":
         async with state.proxy() as data:
             data['type'] = 'fullmsg'
